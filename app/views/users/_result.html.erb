@@ -1,0 +1,26 @@
+<% if(params[:action] == 'search') %>
+    <div class="results-block">
+        <%= bootstrap_flash %>    
+    </div>
+<% end %>
+
+<% if @stock %>
+    <div class="well results-block">
+            <strong>Symbol : </strong><%= @stock.ticker %>
+            <strong>Name : </strong><%= @stock.name %>
+            <strong>Price : </strong><%= @stock.last_price %>
+            <% if current_user.can_add_stock?(@stock.ticker) %>
+                <%= link_to 'Add stock to portfolio' , user_stocks_path(stock_ticker: @stock.ticker ),
+                                                    class: "btn btn-xs btn-success" , method: :post  %>
+            <% else %>
+                <span class="label label-default">
+                    Stock cannot be added because you already added
+                    <% if(!current_user.stock_not_exceed?) %>
+                        10 stocks
+                    <% elsif(current_user.stock_already_add?(@stock.ticker)) %>
+                        this stock
+                    <% end %>
+                </span>                                                            
+            <% end %>
+    </div>
+<% end %>
